@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ComposeDemo</string>
+    <string name="lc_application_app_name" translatable="false">CINNOX</string>
+    <string name="lc_feedback_edittext_hint">Have you encountered any issues or do you have any suggestions on how we can improve %s? Share with us your experience.</string>
+    <string name="lc_feedback_privacy_service">Subject to our Privacy Policy and Terms of Service, some account and system information you provided may be sent to %s. We will use the information to help address technical issues and improve our services.</string>
+    <string name="lc_feedback_privacy_policy">Privacy Policy</string>
+    <string name="lc_feedback_terms_service">Terms of Service</string>
+    <string name="m800_privacy_link">https://docs.cinnox.com/docs/privacy-policy</string>
+    <string name="m800_terms_service_link">https://docs.cinnox.com/docs/terms-and-conditions</string>
+</resources>
