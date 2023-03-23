@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composedemo.ui.theme.ComposeDemoTheme
 
 data class HyperlinkInfo(
@@ -20,8 +21,11 @@ data class HyperlinkInfo(
 )
 
 @Composable
-fun PrivacyTermsField(onClickPrivacyPolicy: () -> Unit, onClickTermsOfService: () -> Unit) {
-    PrivacyPolicyText(onClickPrivacyPolicy, onClickTermsOfService)
+fun PrivacyTermsField(feedbackViewModel: FeedbackViewModel = viewModel()) {
+    PrivacyPolicyText(
+        { feedbackViewModel.openPrivacyPolicy() },
+        { feedbackViewModel.openTermsOfService() }
+    )
 }
 
 @Preview(showBackground = true)
@@ -34,30 +38,25 @@ fun PrivacyTermsPreview() {
 
 @Composable
 fun PrivacyPolicyText(
-    onClickPrivacyPolicy: (() -> Unit)? = null,
-    onClickTermsOfService: (() -> Unit)? = null
+    onClickPrivacyPolicy: (() -> Unit)? = null, onClickTermsOfService: (() -> Unit)? = null
 ) {
     val fullText = stringResource(
         id = R.string.lc_feedback_privacy_service,
         stringResource(id = R.string.lc_application_app_name)
     )
-    val hyperlinkInfoList = listOf(
-        HyperlinkInfo(
-            text = stringResource(id = R.string.lc_feedback_privacy_policy),
+    val hyperlinkInfoList =
+        listOf(HyperlinkInfo(text = stringResource(id = R.string.lc_feedback_privacy_policy),
             link = stringResource(id = R.string.m800_privacy_link),
             action = {
                 onClickPrivacyPolicy?.invoke()
             }
 
-        ),
-        HyperlinkInfo(
-            text = stringResource(id = R.string.lc_feedback_terms_service),
+        ), HyperlinkInfo(text = stringResource(id = R.string.lc_feedback_terms_service),
             link = stringResource(id = R.string.m800_terms_service_link),
             action = {
                 onClickTermsOfService?.invoke()
-            }
+            })
         )
-    )
     HyperlinkText(
         fullText = fullText,
         hyperlinkInfoList = hyperlinkInfoList,
@@ -86,39 +85,26 @@ fun HyperlinkText(
                     fontSize = fontSize,
                     fontWeight = linkTextFontWeight,
                     textDecoration = linkTextDecoration
-                ),
-                start = startIndex,
-                end = endIndex
+                ), start = startIndex, end = endIndex
             )
             addStringAnnotation(
-                tag = "KEY",
-                annotation = info.text,
-                start = startIndex,
-                end = endIndex
+                tag = "KEY", annotation = info.text, start = startIndex, end = endIndex
             )
         }
         addStyle(
             style = SpanStyle(
                 fontSize = fontSize
-            ),
-            start = 0,
-            end = fullText.length
+            ), start = 0, end = fullText.length
         )
     }
 
-    ClickableText(
-        modifier = modifier,
-        text = annotatedString,
-        onClick = {
-            annotatedString
-                .getStringAnnotations("KEY", it, it)
-                .firstOrNull()?.let { stringAnnotation ->
-                    hyperlinkInfoList.forEach { info ->
-                        if (stringAnnotation.item == info.text) {
-                            info.action.invoke(info)
-                        }
-                    }
+    ClickableText(modifier = modifier, text = annotatedString, onClick = {
+        annotatedString.getStringAnnotations("KEY", it, it).firstOrNull()?.let { stringAnnotation ->
+            hyperlinkInfoList.forEach { info ->
+                if (stringAnnotation.item == info.text) {
+                    info.action.invoke(info)
                 }
+            }
         }
-    )
+    })
 }

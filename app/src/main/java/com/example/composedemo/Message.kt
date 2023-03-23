@@ -1,5 +1,6 @@
 package com.example.composedemo
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.LocalTextStyle
@@ -17,23 +18,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composedemo.ui.theme.ComposeDemoTheme
 
 @Composable
-fun MessageField() {
+fun MessageField(feedbackViewModel: FeedbackViewModel = viewModel()) {
     val hint = stringResource(
         id = R.string.lc_feedback_edittext_hint,
         stringResource(id = R.string.lc_application_app_name)
     )
-    var text by remember { mutableStateOf("") }
     val maxLength = 300
-    MaxLengthEditTextWithCounter(
-        maxLength = maxLength,
-        hint = hint,
-        onValueChange = {
-            text = it
-        }
-    )
+    MaxLengthEditTextWithCounter(maxLength = maxLength, hint = hint, onValueChange = {
+        feedbackViewModel.updateInput(it)
+        Log.e("zxc", "input msg = $it")
+    })
 }
 
 @Composable
@@ -55,10 +53,9 @@ fun MaxLengthEditTextWithCounter(
         )
         Spacer(modifier = Modifier.height(10.dp))
         var text by remember { mutableStateOf("") }
-        OutlinedTextField(
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = (5 * (MaterialTheme.typography.body1.fontSize.value + 8)).dp),
+        OutlinedTextField(modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = (5 * (MaterialTheme.typography.body1.fontSize.value + 8)).dp),
             value = text,
             onValueChange = { newValue ->
                 if (newValue.length <= maxLength) {
@@ -73,12 +70,10 @@ fun MaxLengthEditTextWithCounter(
             placeholder = {
                 if (text.isEmpty()) {
                     Text(
-                        text = hint,
-                        style = textStyle.copy(color = hintColor)
+                        text = hint, style = textStyle.copy(color = hintColor)
                     )
                 }
-            }
-        )
+            })
         Spacer(modifier = Modifier.height(10.dp))
         val currentLength = text.length
         Text(

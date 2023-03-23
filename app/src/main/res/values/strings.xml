@@ -7,4 +7,6 @@
     <string name="lc_feedback_terms_service">Terms of Service</string>
     <string name="m800_privacy_link">https://docs.cinnox.com/docs/privacy-policy</string>
     <string name="m800_terms_service_link">https://docs.cinnox.com/docs/terms-and-conditions</string>
+    <string name="lc_feedback_upload_image">Upload Photos</string>
+    <string name="lc_feedback_send">Send</string>
 </resources>
